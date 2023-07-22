@@ -1,29 +1,4 @@
 :root {
-  --colors-red: #ed1d24;
-  --colors-gold: #daa520;
-  --colors-yellow: #fbca03;
-  --colors-brand-4: #edeafd;
-
-  --colors-grey-0: #0b0d0d;
-  --colors-grey-1: #212529;
-  --colors-grey-2: #495057;
-  --colors-grey-3: #868e96;
-  --colors-grey-4: #adb5bd;
-  --colors-grey-5: #ced4da;
-  --colors-grey-6: #dee2e6;
-  --colors-grey-7: #e9ecef;
-  --colors-grey-8: #f1f3f5;
-  --colors-grey-9: #f8f9fa;
-  --colors-grey-10: #fdfdfd;
-  --colors-white: #ffffff;
-
-  --colors-alert-1: #cd2b31;
-  --colors-alert-2: #fdd8d8;
-  --colors-alert-3: #ffe5e5;
-  --colors-sucess-1: #18794e;
-  --colors-sucess-2: #ccebd7;
-  --colors-sucess-3: #ddf3e4;
-
   html {
     box-sizing: border-box;
     font-size: 16px;
@@ -35,33 +10,8 @@
     box-sizing: inherit;
   }
 
-  body,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  ol,
-  ul {
-    margin: 0;
-    padding: 0;
-    font-weight: normal;
-  }
-
   ol,
   ul {
     list-style: none;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-  figure {
-    margin: 0;
-    padding: 0;
-    border: 0;
   }
 }
