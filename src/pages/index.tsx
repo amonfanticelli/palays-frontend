@@ -1,3 +1,5 @@
+"use client";
+
 import "tailwindcss/tailwind.css";
 import Image from "next/image";
 import { CiUser, CiSearch, CiShoppingCart } from "react-icons/ci";
@@ -6,15 +8,28 @@ import cardImage1 from "../../public/assets/card1.jpg";
 import cardImage2 from "../../public/assets/card2.jpg";
 import { register } from "swiper/element/bundle";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectFade } from "swiper/modules";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { useEffect } from "react";
+import { useGlobalContext } from "@/provider/store";
 
 export default function Home() {
+  const { outfits, handlerGETOutfits } = useGlobalContext();
   register();
+  useEffect(() => {
+    if (!outfits.length) {
+      handlerGETOutfits();
+      // console.log(outfits);
+    }
+  }, [outfits]);
 
+  // useEffect(() => {
+  //   handlerGETOutfits();
+  //   console.log(outfits);
+  // }, [outfits]);
   return (
     <>
       <header className="w-full flex flex-col">
@@ -48,125 +63,38 @@ export default function Home() {
       <main className="w-full max-w-screen-xl mx-auto py-7 px-10 ">
         <h1 className="w-full text-2xl font-helvetica font-bold mb-8">Store</h1>
 
-        <div className="w-full flex gap-3">
+        <div className="w-full flex gap-3 ">
           <Swiper
-            modules={[EffectFade]}
-            slidesPerView={4}
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            slidesPerView={3}
             pagination={{ clickable: true }}
-            navigation
+            navigation={true}
+            spaceBetween={10}
           >
-            <SwiperSlide>
-              <div className="w-[269px] flex flex-col">
-                <figure>
-                  <Image
-                    className="mx-auto"
-                    src={cardImage1}
-                    alt="imagem do card"
-                    width="200"
-                  />
-                </figure>
+            {outfits.map((outfit) => (
+              <SwiperSlide key={outfit.id}>
+                <div className="w-[269px] flex flex-col">
+                  <figure>
+                    <Image
+                      className="mx-auto"
+                      src={cardImage1}
+                      alt="imagem do card"
+                      width="200"
+                    />
+                  </figure>
 
-                <div className="flex flex-col py-6">
-                  <span className=" font-bold text-sm font-helvetica">
-                    {" "}
-                    Camiseta chavona
-                  </span>
-                  <span className="font-normal font-helvetica text-base">
-                    R$ 200,00{" "}
-                  </span>
+                  <div className="flex flex-col py-6">
+                    <span className=" font-bold text-sm font-helvetica">
+                      {" "}
+                      {outfit.name}
+                    </span>
+                    <span className="font-normal font-helvetica text-base">
+                      {outfit.price}{" "}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="w-[269px] flex flex-col">
-                <figure>
-                  <Image
-                    className="mx-auto"
-                    src={cardImage1}
-                    alt="imagem do card"
-                    width="200"
-                  />
-                </figure>
-
-                <div className="flex flex-col py-6">
-                  <span className=" font-bold text-sm font-helvetica">
-                    {" "}
-                    Camiseta chavona
-                  </span>
-                  <span className="font-normal font-helvetica text-base">
-                    R$ 200,00{" "}
-                  </span>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="w-[269px] flex flex-col">
-                <figure>
-                  <Image
-                    className="mx-auto"
-                    src={cardImage1}
-                    alt="imagem do card"
-                    width="200"
-                  />
-                </figure>
-
-                <div className="flex flex-col py-6">
-                  <span className=" font-bold text-sm font-helvetica">
-                    {" "}
-                    Camiseta chavona
-                  </span>
-                  <span className="font-normal font-helvetica text-base">
-                    R$ 200,00{" "}
-                  </span>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="w-[269px] flex flex-col">
-                <figure>
-                  <Image
-                    src={cardImage2}
-                    className="mx-auto"
-                    alt="imagem do card 2"
-                    width="200"
-                  />
-                </figure>
-                <div className="flex flex-col py-6">
-                  <span className=" font-bold text-sm font-helvetica">
-                    {" "}
-                    Camiseta chavona
-                  </span>
-                  <span className="font-normal font-helvetica text-base">
-                    R$ 200,00{" "}
-                  </span>
-                  {/* weight 400, font helvetica, size 16px, color: rgba(18, 18, 18, 0.75) */}
-                  `
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="w-[269px] flex flex-col">
-                <figure>
-                  <Image
-                    src={cardImage2}
-                    className="mx-auto"
-                    alt="imagem do card 2"
-                    width="200"
-                  />
-                </figure>
-                <div className="flex flex-col py-6">
-                  <span className=" font-bold text-sm font-helvetica">
-                    {" "}
-                    Camiseta chavona
-                  </span>
-                  <span className="font-normal font-helvetica text-base">
-                    R$ 200,00{" "}
-                  </span>
-                  {/* weight 400, font helvetica, size 16px, color: rgba(18, 18, 18, 0.75) */}
-                  `
-                </div>
-              </div>
-            </SwiperSlide>
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
       </main>
