@@ -45,6 +45,7 @@ export default function Home({ products }: HomeProps) {
                 <Link
                   href={`/product/${product.id}`}
                   className="w-[269px] flex flex-col"
+                  prefetch={false}
                 >
                   <figure>
                     <Image
