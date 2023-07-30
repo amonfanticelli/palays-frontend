@@ -1,11 +1,7 @@
-"use client";
-
 import "tailwindcss/tailwind.css";
+import Header from "@/components/Header";
 import Image from "next/image";
-import { CiUser, CiSearch, CiShoppingCart } from "react-icons/ci";
-import palays from "../../public/assets/palays.png";
-import cardImage1 from "../../public/assets/card1.jpg";
-import cardImage2 from "../../public/assets/card2.jpg";
+import Link from "next/link";
 import { register } from "swiper/element/bundle";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
@@ -13,91 +9,94 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { useEffect } from "react";
-import { useGlobalContext } from "@/provider/store";
+import { stripe } from "@/lib/stripe";
+import { GetStaticProps } from "next";
+import Stripe from "stripe";
+interface HomeProps {
+  products: {
+    id: string;
+    name: string;
+    imageUrl: string;
+    price: string;
+  }[];
+  // bota um colchete no final pois é um array de produtos
+}
 
-export default function Home() {
-  const { outfits, handlerGETOutfits } = useGlobalContext();
+export default function Home({ products }: HomeProps) {
   register();
-  useEffect(() => {
-    if (!outfits.length) {
-      handlerGETOutfits();
-      // console.log(outfits);
-    }
-  }, [outfits]);
-
-  // useEffect(() => {
-  //   handlerGETOutfits();
-  //   console.log(outfits);
-  // }, [outfits]);
   return (
     <>
-      <header className="w-full flex flex-col">
-        <div className="bg-black py-2 flex justify-center">
-          <p className=" text-gray-50 text-xs ">
-            FRETE GRÁTIS À PARTIR DE R$399
-          </p>
-        </div>
-        <div className="w-full flex items-center border-b-2 border-gray-300">
-          <div className="max-w-screen-xl flex justify-between items-center w-full px-10 py-5 mx-auto">
-            <figure>
-              <Image src={palays} alt="logo da marca palays" width="200" />
-            </figure>
-
-            <div className="flex space-x-2">
-              <button>
-                <CiSearch className="w-6 h-6" />
-              </button>
-
-              <a href="">
-                <CiUser className="w-6 h-6" />
-              </a>
-              <button>
-                <CiShoppingCart className="w-6 h-6" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
+      <Header />
       <main className="w-full max-w-screen-xl mx-auto py-7 px-10 ">
         <h1 className="w-full text-2xl font-helvetica font-bold mb-8">Store</h1>
 
-        <div className="w-full flex gap-3 ">
+        <section className="w-full flex gap-3 ">
           <Swiper
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            slidesPerView={3}
+            modules={[Navigation, Pagination, A11y]}
+            slidesPerView={4}
             pagination={{ clickable: true }}
             navigation={true}
             spaceBetween={10}
+            preventClicks={true}
+            simulateTouch={true}
           >
-            {outfits.map((outfit) => (
-              <SwiperSlide key={outfit.id}>
-                <div className="w-[269px] flex flex-col">
+            {products.map((product) => (
+              <SwiperSlide key={product.id}>
+                <Link
+                  href={`/product/${product.id}`}
+                  className="w-[269px] flex flex-col"
+                >
                   <figure>
                     <Image
                       className="mx-auto"
-                      src={cardImage1}
+                      src={product.imageUrl}
                       alt="imagem do card"
-                      width="200"
+                      width={250}
+                      height={250}
                     />
                   </figure>
 
                   <div className="flex flex-col py-6">
                     <span className=" font-bold text-sm font-helvetica">
                       {" "}
-                      {outfit.name}
+                      {product.name}
                     </span>
                     <span className="font-normal font-helvetica text-base">
-                      {outfit.price}{" "}
+                      {product.price}{" "}
                     </span>
                   </div>
-                </div>
+                </Link>
               </SwiperSlide>
             ))}
           </Swiper>
-        </div>
+        </section>
       </main>
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await stripe.products.list({
+    expand: ["data.default_price"],
+  });
+  const products = response.data.map((product) => {
+    const price = product.default_price as Stripe.Price;
+
+    return {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.images[0],
+      price: new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(price.unit_amount! / 100),
+    };
+  });
+
+  return {
+    props: {
+      products,
+    },
+    revalidate: 60 * 60 * 2, //  2 hours
+  };
+};

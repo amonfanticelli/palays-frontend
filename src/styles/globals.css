@@ -17,23 +17,14 @@
 
   .swiper-button-next::after {
     color: black;
-    /* position: absolute; */
-    /* left: -20px; */
+    position: absolute;
+    left: -20px;
   }
   .swiper-button-prev::after {
     color: black;
-    /* position: absolute; */
+    position: absolute;
   }
   .swiper-pagination-bullet {
     background: black;
   }
-}
-
-/* .swiper-wrapper {
-  display: flex;
-  gap: 20px;
-} */
-.swiper-slide {
-  /* border: 1px solid red; */
-  /* max-width: 269px; */
 }
