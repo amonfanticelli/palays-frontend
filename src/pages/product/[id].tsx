@@ -4,6 +4,8 @@ import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import { stripe } from "@/lib/stripe";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import axios from "axios";
+import { useState } from "react";
 
 interface ProductProps {
   product: {
@@ -12,28 +14,48 @@ interface ProductProps {
     imageUrl: string;
     price: string;
     description: string;
+    defaultPriceId: string;
   };
 }
 
 export default function Product({ product }: ProductProps) {
-  const { isFallback } = useRouter();
-  if (isFallback) {
-    return <p>Loading...</p>;
-  }
-  // loading da page
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false);
 
+  // const { isFallback } = useRouter();
+  // if (isFallback) {
+  //   return <p>Loading...</p>;
+  // }
+  // loading da page -- pesquisar sobre skeleton page
+
+  async function handleBuyProduct() {
+    try {
+      setIsCreatingCheckoutSession(true);
+      const response = await axios.post("/api/checkout", {
+        priceId: product.defaultPriceId,
+      });
+      const { checkoutUrl } = response.data;
+
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      setIsCreatingCheckoutSession(false);
+      // Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
+      console.log(error);
+    }
+  }
   return (
     <>
       <Header />
       <section className="w-full h max-w-screen-xl mx-auto py-8 px-10 flex justify-between">
-        <figure className="w-full h-full max-w-[620px] max-h-[620px] relative">
-          <Image
-            src={product.imageUrl}
-            width={620}
-            height={620}
-            alt="imagem do produto"
-          />
-        </figure>
+        {/* <figure className="w-full h-full "> */}
+        <Image
+          src={product.imageUrl}
+          width={620}
+          height={620}
+          alt="imagem do produto"
+          style={{ maxWidth: "620px" }}
+        />
+        {/* </figure> */}
 
         <aside className="w-full max-w-[540px] flex flex-col">
           {/*  Preço, nome do produto e nome da marca */}
@@ -80,7 +102,11 @@ export default function Product({ product }: ProductProps) {
             <button className="w-full border border-black max-w-[343px] h-[45px] font-normal font-helvetica">
               ADICIONAR AO CARRINHO
             </button>
-            <button className="w-full border border-black bg-black max-w-[343px] h-[45px] text-gray-50">
+            <button
+              disabled={isCreatingCheckoutSession}
+              onClick={handleBuyProduct}
+              className="w-full border border-black bg-black max-w-[343px] h-[45px] text-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
               COMPRAR
             </button>
           </div>
@@ -130,6 +156,7 @@ export const getServerSideProps: GetServerSideProps<
           currency: "BRL",
         }).format(price.unit_amount! / 100),
         description: product.description,
+        defaultPriceId: price.id,
       },
     },
     //   revalidate: 60 * 60 * 1, 1 hour

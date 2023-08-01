@@ -18,13 +18,26 @@
   .swiper-button-next::after {
     color: black;
     position: absolute;
-    left: -20px;
+    left: 10px;
   }
   .swiper-button-prev::after {
     color: black;
     position: absolute;
+    left: -7px;
   }
   .swiper-pagination-bullet {
     background: black;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+  }
+  .swiper-wrapper {
+    /* background: red; */
+  }
+
+  .swiper {
+    padding: 32px;
   }
 }

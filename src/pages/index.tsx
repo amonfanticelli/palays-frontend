@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { register } from "swiper/element/bundle";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { Navigation, Pagination, A11y, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -32,13 +32,31 @@ export default function Home({ products }: HomeProps) {
 
         <section className="w-full flex gap-3 ">
           <Swiper
-            modules={[Navigation, Pagination, A11y]}
-            slidesPerView={4}
-            pagination={{ clickable: true }}
-            navigation={true}
+            modules={[Navigation, Pagination, A11y, EffectFade]}
+            slidesPerView={3}
             spaceBetween={10}
-            preventClicks={true}
+            loop={true}
+            // centeredSlides={true}
+            pagination={{ clickable: true, dynamicBullets: true }}
+            navigation={true}
+            grabCursor={true}
+            // preventClicks={true}
             simulateTouch={true}
+            breakpoints={{
+              700: {
+                slidesPerView: 3,
+                spaceBetween: 10,
+              },
+
+              480: {
+                slidesPerView: 2,
+                spaceBetween: 10,
+              },
+              375: {
+                slidesPerView: 1,
+                spaceBetween: 10,
+              },
+            }}
           >
             {products.map((product) => (
               <SwiperSlide key={product.id}>
