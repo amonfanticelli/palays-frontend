@@ -1,16 +1,40 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useState,
+} from "react";
 
 interface IProvider {
   children: React.ReactNode;
 }
 
-interface ContextProps {}
+interface ContextProps {
+  isCartOpen: boolean;
+  setIsCartOpen: Dispatch<SetStateAction<boolean>>;
+  handleCart: () => void;
+}
 
-const GlobalContext = createContext<ContextProps>({});
+const GlobalContext = createContext<ContextProps>({
+  isCartOpen: false,
+  setIsCartOpen: (): boolean => false,
+  handleCart: () => {},
+});
 
 export function GlobalContextProvider({ children }: IProvider) {
-  return <GlobalContext.Provider value={{}}>{children}</GlobalContext.Provider>;
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+
+  const handleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+  return (
+    <GlobalContext.Provider value={{ isCartOpen, setIsCartOpen, handleCart }}>
+      {children}
+    </GlobalContext.Provider>
+  );
 }
 
 export const useGlobalContext = () => useContext(GlobalContext);

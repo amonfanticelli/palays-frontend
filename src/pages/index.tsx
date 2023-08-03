@@ -1,3 +1,4 @@
+"use client";
 import "tailwindcss/tailwind.css";
 import Header from "@/components/Header";
 import Image from "next/image";
@@ -12,6 +13,9 @@ import "swiper/css/scrollbar";
 import { stripe } from "@/lib/stripe";
 import { GetStaticProps } from "next";
 import Stripe from "stripe";
+import Cart from "@/components/Cart";
+import { useGlobalContext } from "@/provider/store";
+
 interface HomeProps {
   products: {
     id: string;
@@ -24,8 +28,10 @@ interface HomeProps {
 
 export default function Home({ products }: HomeProps) {
   register();
+  const { isCartOpen } = useGlobalContext();
   return (
     <>
+      {isCartOpen && <Cart />}
       <Header />
       <main className="w-full max-w-screen-xl mx-auto py-7 px-10 ">
         <h1 className="w-full text-2xl font-helvetica font-bold mb-8">Store</h1>
@@ -35,24 +41,26 @@ export default function Home({ products }: HomeProps) {
             modules={[Navigation, Pagination, A11y, EffectFade]}
             slidesPerView={3}
             spaceBetween={10}
-            loop={true}
+            // loop={true}
             // centeredSlides={true}
             pagination={{ clickable: true, dynamicBullets: true }}
             navigation={true}
             grabCursor={true}
+            longSwipes={false}
+            // a11y={true}
             // preventClicks={true}
-            simulateTouch={true}
             breakpoints={{
               700: {
                 slidesPerView: 3,
                 spaceBetween: 10,
               },
 
-              480: {
+              550: {
                 slidesPerView: 2,
                 spaceBetween: 10,
               },
-              375: {
+
+              320: {
                 slidesPerView: 1,
                 spaceBetween: 10,
               },

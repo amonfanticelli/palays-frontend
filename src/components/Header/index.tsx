@@ -1,10 +1,14 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import palays from "../../../public/assets/palays.png";
-import { CiUser, CiSearch, CiShoppingCart } from "react-icons/ci";
 import React from "react";
+import palays from "../../../public/assets/palays.png";
+import { MagnifyingGlass, User, Handbag } from "@phosphor-icons/react";
+import { useGlobalContext } from "@/provider/store";
 
 export default function Header() {
+  const { handleCart } = useGlobalContext();
+
   return (
     <header className="w-full flex flex-col">
       <div className="bg-black py-2 flex justify-center">
@@ -22,14 +26,16 @@ export default function Header() {
           </Link>
           <div className="flex space-x-2">
             <button>
-              <CiSearch className="w-6 h-6" />
+              <MagnifyingGlass weight="thin" size={32} />
             </button>
-
-            <a href="">
-              <CiUser className="w-6 h-6" />
-            </a>
             <button>
-              <CiShoppingCart className="w-6 h-6" />
+              <User weight="thin" size={32} />
+            </button>
+            <button
+              onClick={handleCart}
+              className="flex justify-center items-center"
+            >
+              <Handbag weight="thin" size={32} />
             </button>
           </div>
         </div>
