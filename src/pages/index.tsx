@@ -41,14 +41,12 @@ export default function Home({ products }: HomeProps) {
             modules={[Navigation, Pagination, A11y, EffectFade]}
             slidesPerView={3}
             spaceBetween={10}
-            // loop={true}
-            // centeredSlides={true}
             pagination={{ clickable: true, dynamicBullets: true }}
             navigation={true}
             grabCursor={true}
             longSwipes={false}
             // a11y={true}
-            // preventClicks={true}
+
             breakpoints={{
               700: {
                 slidesPerView: 3,
