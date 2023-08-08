@@ -1,4 +1,3 @@
-"use client";
 import "tailwindcss/tailwind.css";
 import Header from "@/components/Header";
 import Image from "next/image";
@@ -22,6 +21,8 @@ interface HomeProps {
     name: string;
     imageUrl: string;
     price: string;
+    numberPrice: number;
+    defaultPriceId: string;
   }[];
   // bota um colchete no final pois é um array de produtos
 }
@@ -115,6 +116,8 @@ export const getStaticProps: GetStaticProps = async () => {
         style: "currency",
         currency: "BRL",
       }).format(price.unit_amount! / 100),
+      numberPrice: price.unit_amount! / 100,
+      defaultPriceId: price.id,
     };
   });
 

@@ -6,7 +6,8 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import axios from "axios";
 import { useState } from "react";
-
+import { useGlobalContext } from "@/provider/store";
+import Cart from "@/components/Cart";
 interface ProductProps {
   product: {
     id: string;
@@ -15,10 +16,12 @@ interface ProductProps {
     price: string;
     description: string;
     defaultPriceId: string;
+    numberPrice: number;
   };
 }
 
 export default function Product({ product }: ProductProps) {
+  const { isCartOpen, addToCart } = useGlobalContext();
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false);
 
@@ -45,6 +48,7 @@ export default function Product({ product }: ProductProps) {
   }
   return (
     <>
+      {isCartOpen && <Cart />}
       <Header />
       <section className="w-full h max-w-screen-xl mx-auto py-8 px-10 flex justify-between">
         {/* <figure className="w-full h-full "> */}
@@ -99,7 +103,10 @@ export default function Product({ product }: ProductProps) {
           </div>
           {/* container buttons */}
           <div className="flex flex-col gap-1.5 mb-3.5">
-            <button className="w-full border border-black max-w-[343px] h-[45px] font-normal font-helvetica">
+            <button
+              onClick={() => addToCart(product)}
+              className="w-full border border-black max-w-[343px] h-[45px] font-normal font-helvetica"
+            >
               ADICIONAR AO CARRINHO
             </button>
             <button
@@ -155,6 +162,7 @@ export const getServerSideProps: GetServerSideProps<
           style: "currency",
           currency: "BRL",
         }).format(price.unit_amount! / 100),
+        numberPrice: price.unit_amount! / 100,
         description: product.description,
         defaultPriceId: price.id,
       },
