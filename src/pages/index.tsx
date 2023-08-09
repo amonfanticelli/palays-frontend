@@ -14,6 +14,7 @@ import { GetStaticProps } from "next";
 import Stripe from "stripe";
 import Cart from "@/components/Cart";
 import { useGlobalContext } from "@/provider/store";
+import Footer from "@/components/Footer";
 
 interface HomeProps {
   products: {
@@ -31,7 +32,7 @@ export default function Home({ products }: HomeProps) {
   register();
   const { isCartOpen } = useGlobalContext();
   return (
-    <>
+    <div className="min-h-screen relative">
       {isCartOpen && <Cart />}
       <Header />
       <main className="w-full max-w-screen-xl mx-auto py-7 px-10 ">
@@ -97,7 +98,8 @@ export default function Home({ products }: HomeProps) {
           </Swiper>
         </section>
       </main>
-    </>
+      <Footer />
+    </div>
   );
 }
 

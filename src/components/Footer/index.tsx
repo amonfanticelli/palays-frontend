@@ -1,8 +1,11 @@
 export default function Footer() {
   return (
     <>
-      <div></div>
-      <div></div>
+      <footer className="absolute bottom-0 h-[150px] w-full border-t border-gray-300 flex justify-center items-center]">
+        <span className="text-xs font-normal font-helvetica flex items-center">
+          © 2023, Palays Store, todos os direitos reservados
+        </span>
+      </footer>
     </>
   );
 }

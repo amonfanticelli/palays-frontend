@@ -8,6 +8,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useGlobalContext } from "@/provider/store";
 import Cart from "@/components/Cart";
+import Footer from "@/components/Footer";
 interface ProductProps {
   product: {
     id: string;
@@ -47,7 +48,7 @@ export default function Product({ product }: ProductProps) {
     }
   }
   return (
-    <>
+    <div className="min-h-screen relative">
       {isCartOpen && <Cart />}
       <Header />
       <section className="w-full h max-w-screen-xl mx-auto py-8 px-10 flex justify-between">
@@ -105,17 +106,17 @@ export default function Product({ product }: ProductProps) {
           <div className="flex flex-col gap-1.5 mb-3.5">
             <button
               onClick={() => addToCart(product)}
-              className="w-full border border-black max-w-[343px] h-[45px] font-normal font-helvetica"
+              className="w-full border border-black max-w-[343px] h-[45px] font-normal font-helvetica hover:bg-black hover:text-gray-50 transition duration-300"
             >
               ADICIONAR AO CARRINHO
             </button>
-            <button
+            {/* <button
               disabled={isCreatingCheckoutSession}
               onClick={handleBuyProduct}
               className="w-full border border-black bg-black max-w-[343px] h-[45px] text-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               COMPRAR
-            </button>
+            </button> */}
           </div>
           {/* container descrição */}
           <div className="flex flex-col gap-2">
@@ -128,7 +129,8 @@ export default function Product({ product }: ProductProps) {
           </div>
         </aside>
       </section>
-    </>
+      <Footer />
+    </div>
   );
 }
 
