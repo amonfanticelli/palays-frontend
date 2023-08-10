@@ -49,23 +49,23 @@ export default function Cart() {
             Seu carrinho está vazio
           </span>
         ) : (
-          cartItens.map((cartItem) => (
-            <li key={cartItem.id} className="flex justify-between">
+          cartItens.map(({ prod, quantity }) => (
+            <li key={prod.id} className="flex justify-between">
               <Image
-                src={cartItem.imageUrl}
+                src={prod.imageUrl}
                 width={100}
                 height={100}
                 alt="imagem do produto no carrinho"
               ></Image>
               <div className="flex flex-col gap-2">
                 <span className="font-normal text-lg text-gray-500 font-helvetica">
-                  {cartItem.name}
+                  {prod.name}
                 </span>
                 <span className="font-helvetica font-bold text-lg">
-                  {cartItem.price}
+                  {prod.price}
                 </span>
                 <button
-                  onClick={() => removeCartItem(cartItem.id)}
+                  onClick={() => removeCartItem(prod.id)}
                   className="flex font-helvetica font-bold text-base hover:text-red-600 transition duration-300"
                 >
                   Remover
@@ -74,13 +74,12 @@ export default function Cart() {
 
               <div className="flex border border-gray-400 items-center gap-3 px-2 h-11">
                 <button>
-                  {" "}
                   <Minus size={16} weight={"regular"} />
-                </button>{" "}
-                <span>3</span>
+                </button>
+                <span>{quantity}</span>
                 <button>
                   <Plus size={16} weight={"regular"} />
-                </button>{" "}
+                </button>
               </div>
             </li>
           ))

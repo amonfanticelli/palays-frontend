@@ -19,12 +19,16 @@ export interface IProduct {
   description: string;
   defaultPriceId: string;
 }
+export interface ICartItem {
+  prod: IProduct;
+  quantity: number;
+}
 interface ContextProps {
   isCartOpen: boolean;
   setIsCartOpen: Dispatch<SetStateAction<boolean>>;
   handleCart: () => void;
-  cartItens: IProduct[];
-  setCartItens: Dispatch<SetStateAction<IProduct[]>>;
+  cartItens: ICartItem[];
+  setCartItens: Dispatch<SetStateAction<ICartItem[]>>;
   addToCart: (product: IProduct) => void;
   removeCartItem: (productId: string) => void;
   cartTotal: number;
@@ -34,23 +38,39 @@ export const GlobalContext = createContext({} as ContextProps);
 
 export function GlobalContextProvider({ children }: IProvider) {
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
-  const [cartItens, setCartItens] = useState<IProduct[]>([]);
+  const [cartItens, setCartItens] = useState<ICartItem[]>([]);
 
   const handleCart = () => {
     setIsCartOpen(!isCartOpen);
   };
 
-  const addToCart = (product: IProduct) => {
-    setCartItens((state) => [...state, product]);
+  const addToCart = (newProduct: IProduct) => {
+    const cartItemFound = cartItens.find(
+      ({ prod }) => prod.id === newProduct.id
+    );
+    // [{ prod: 1, qtd: 1 }, { prod: 2, qtd: 2 }]
+    // if (cartItem.quantity > 1  ) {... } else { remove}
+    if (cartItemFound) {
+      setCartItens((state) =>
+        state.map((cartItem) =>
+          cartItem.prod.id === cartItemFound.prod.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        )
+      );
+    } else {
+      setCartItens((state) => [...state, { prod: newProduct, quantity: 1 }]);
+    }
+
     setIsCartOpen(true);
   };
 
   const removeCartItem = (productId: string) => {
-    setCartItens((state) => state.filter((item) => item.id !== productId));
+    setCartItens((state) => state.filter(({ prod }) => prod.id !== productId));
   };
 
-  const cartTotal = cartItens.reduce((total, product) => {
-    return total + product.numberPrice;
+  const cartTotal = cartItens.reduce((total, { prod }) => {
+    return total + prod.numberPrice;
   }, 0);
 
   return (
