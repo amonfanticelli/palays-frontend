@@ -5,8 +5,14 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function Cart() {
-  const { setIsCartOpen, cartItens, removeCartItem, cartTotal } =
-    useGlobalContext();
+  const {
+    setIsCartOpen,
+    cartItems,
+    removeCartItem,
+    cartTotal,
+    addToCart,
+    minusRemoveFromCart,
+  } = useGlobalContext();
 
   const cartTotalFormatted = new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -21,7 +27,7 @@ export default function Cart() {
       setIsCreatingCheckoutSession(true);
 
       const response = await axios.post("/api/checkout", {
-        products: cartItens,
+        products: cartItems,
       });
       const { checkoutUrl } = response.data;
 
@@ -44,12 +50,12 @@ export default function Cart() {
         Carrinho de Compras
       </h2>
       <ul className="mx-10 flex flex-col gap-6 min-h-[472px] max-h-[472px] overflow-auto relative">
-        {!cartItens.length ? (
+        {!cartItems.length ? (
           <span className="font font-helvetica font-bold self-center absolute  bottom-[210px] ">
             Seu carrinho está vazio
           </span>
         ) : (
-          cartItens.map(({ prod, quantity }) => (
+          cartItems.map(({ prod, quantity }) => (
             <li key={prod.id} className="flex justify-between">
               <Image
                 src={prod.imageUrl}
@@ -62,7 +68,10 @@ export default function Cart() {
                   {prod.name}
                 </span>
                 <span className="font-helvetica font-bold text-lg">
-                  {prod.price}
+                  {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(prod.numberPrice * quantity)}
                 </span>
                 <button
                   onClick={() => removeCartItem(prod.id)}
@@ -73,11 +82,11 @@ export default function Cart() {
               </div>
 
               <div className="flex border border-gray-400 items-center gap-3 px-2 h-11">
-                <button>
+                <button onClick={() => minusRemoveFromCart(prod)}>
                   <Minus size={16} weight={"regular"} />
                 </button>
                 <span>{quantity}</span>
-                <button>
+                <button onClick={() => addToCart(prod)}>
                   <Plus size={16} weight={"regular"} />
                 </button>
               </div>
@@ -91,13 +100,18 @@ export default function Cart() {
             Quantidade
           </span>
           <span className="text-gray-500 font-helvetica font-normal text-lg">
-            {cartItens.length} {cartItens.length > 1 ? "Itens" : "Item"}
+            {cartItems.length} {cartItems.length === 1 ? "Item" : "Items"}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="font-bold font-helvetica text-lg">Valor Total</span>
           <span className="font-bold font-helvetica text-lg">
-            {cartTotalFormatted}
+            {cartItems.length <= 1
+              ? cartTotalFormatted
+              : new Intl.NumberFormat("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                }).format(cartTotal)}
           </span>
         </div>
       </div>

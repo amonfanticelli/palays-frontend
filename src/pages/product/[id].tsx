@@ -77,7 +77,7 @@ export default function Product({ product }: ProductProps) {
           </span>
 
           {/* container com tamanhos */}
-          <div className="flex flex-col mb-3">
+          <div className="flex flex-col mb-3.5">
             <span className="font-normal font-helvetica text-sm text-gray-500 mb-2">
               Tamanho
             </span>
@@ -96,12 +96,7 @@ export default function Product({ product }: ProductProps) {
               </button>
             </div>
           </div>
-          {/* container quantidade de produtos */}
-          <div className="flex flex-col mb-3">
-            <span className="font-normal font-helvetica text-sm text-gray-500 mb-2">
-              Quantidade
-            </span>
-          </div>
+
           {/* container buttons */}
           <div className="flex flex-col gap-1.5 mb-3.5">
             <button
