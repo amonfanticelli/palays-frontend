@@ -1,3 +1,4 @@
+import "tailwindcss/tailwind.css";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -24,10 +25,10 @@ export default function Header() {
             />
           </Link>
           <div className="flex space-x-2">
-            <button>
+            <button className="hidden">
               <MagnifyingGlass weight="thin" size={32} />
             </button>
-            <button>
+            <button className="hidden">
               <User weight="thin" size={32} />
             </button>
             <button

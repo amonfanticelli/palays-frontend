@@ -1,3 +1,4 @@
+import "tailwindcss/tailwind.css";
 import { Minus, Plus, X } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useGlobalContext } from "@/provider/store";

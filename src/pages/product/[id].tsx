@@ -1,3 +1,4 @@
+import "tailwindcss/tailwind.css";
 import Header from "@/components/Header";
 import Stripe from "stripe";
 import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
@@ -82,10 +83,10 @@ export default function Product({ product }: ProductProps) {
               Tamanho
             </span>
             <div className="flex gap-2 ">
-              <button className="py-2.5 px-5 rounded-3xl rounded-l-3xl border border-black font-helvetica text-sm ">
+              <button className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm ">
                 P
               </button>
-              <button className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm">
+              <button className="py-2.5 px-5 rounded-3xl  border border-black font-helvetica text-sm">
                 M
               </button>
               <button className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm">
@@ -147,6 +148,12 @@ export const getServerSideProps: GetServerSideProps<
     expand: ["default_price"],
   });
 
+  const productPriceData = await stripe.prices.list({
+    expand: ["data.product"], //
+  });
+
+  console.log(productPriceData);
+
   const price = product.default_price as Stripe.Price;
 
   return {
@@ -164,6 +171,6 @@ export const getServerSideProps: GetServerSideProps<
         defaultPriceId: price.id,
       },
     },
-    //   revalidate: 60 * 60 * 1, 1 hour
+    //   revalidate: 60 * 60 * 1 // 1 hour
   };
 };

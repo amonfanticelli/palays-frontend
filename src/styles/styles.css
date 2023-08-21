@@ -33,9 +33,6 @@
     display: flex;
     justify-content: center;
   }
-  .swiper-wrapper {
-    /* background: red; */
-  }
 
   .swiper {
     padding: 32px;

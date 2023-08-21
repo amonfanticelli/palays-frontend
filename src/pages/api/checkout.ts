@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from "next";
 import { stripe } from "@/lib/stripe";
-import { IProduct } from "@/provider/store";
 import { ICartItem } from "@/provider/store";
 
 export default async function handlerProducts(
@@ -9,7 +8,7 @@ export default async function handlerProducts(
   res: NextApiResponse
 ) {
   const { products } = req.body as { products: ICartItem[] };
-  console.log(products);
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -22,8 +21,6 @@ export default async function handlerProducts(
   const cancelUrl = `${process.env.NEXT_URL}`;
 
   const checkoutSession = await stripe.checkout.sessions.create({
-    success_url: successUrl,
-    cancel_url: cancelUrl,
     shipping_options: [
       {
         shipping_rate_data: {
@@ -78,26 +75,36 @@ export default async function handlerProducts(
     phone_number_collection: {
       enabled: true,
     },
-    // custom_fields: [
-    //   {
-    //     key: "size",
-    //     label: {
-    //       custom: "Size",
-    //       type: "custom",
-    //     },
-    //     dropdown: {
-
-    //       options: [
-    //         {
-    //           label: "Small",
-    //           value: "small",
-    //         },
-    //       ],
-    //     },
-    //     type: "dropdown",
-    //   },
-    // ],
+    custom_fields: [
+      {
+        key: "size",
+        label: {
+          custom: "Size",
+          type: "custom",
+        },
+        dropdown: {
+          options: [
+            {
+              label: "P",
+              value: "small",
+            },
+            {
+              label: "M",
+              value: "medium",
+            },
+            {
+              label: "G",
+              value: "big",
+            },
+          ],
+        },
+        type: "dropdown",
+      },
+    ],
     mode: "payment",
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+
     line_items: products.map(({ prod, quantity }) => ({
       price: prod.defaultPriceId,
       quantity: quantity,
