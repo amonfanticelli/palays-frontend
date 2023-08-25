@@ -10,12 +10,12 @@ export default function Header() {
   const { handleCart } = useGlobalContext();
 
   return (
-    <header className="w-full flex flex-col">
+    <header className="w-full flex flex-col ">
       <div className="bg-black py-2 flex justify-center">
         <p className=" text-gray-50 text-xs ">FRETE GRÁTIS À PARTIR DE R$399</p>
       </div>
       <div className="w-full flex items-center border-b-2 border-gray-300">
-        <div className="max-w-screen-xl flex justify-between items-center w-full px-10 py-5 mx-auto">
+        <div className="max-w-screen-xl flex justify-between items-center w-full px-10 py-5 mx-auto max-[768px]:px-4">
           <Link href={"/"}>
             <Image
               src={palays}

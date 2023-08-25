@@ -30,7 +30,7 @@ export default function Success({
         </div>
       </header>
       <div className="flex flex-col items-center">
-        <section className="flex items-center justify-center  gap-4 max-[1024px]:max-w-[375px] flex-wrap">
+        <section className="flex items-center justify-center gap-4 max-[1024px]:max-w-[375px] flex-wrap">
           {productsImages.map((image, i) => (
             <div
               key={i}

@@ -5,7 +5,6 @@ import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import { stripe } from "@/lib/stripe";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import axios from "axios";
 import { useState } from "react";
 import { useGlobalContext } from "@/provider/store";
 import Cart from "@/components/Cart";
@@ -91,18 +90,18 @@ export default function Product({ product }: ProductProps) {
     <div className="min-h-screen relative">
       {isCartOpen && <Cart />}
       <Header />
-      <section className="w-full h max-w-screen-xl mx-auto py-8 px-10 flex justify-between">
+      <section className="w-full h max-w-screen-xl mx-auto py-8 px-10 flex justify-between max-[768px]:px-4 max-[1260px]:flex max-[1260px]:flex-col max-[1260px]:items-center">
         {/* <figure className="w-full h-full "> */}
         <Image
           src={product.imageUrl}
           width={620}
           height={620}
+          sizes="(max-width: 768px) 100vw"
           alt="imagem do produto"
-          style={{ maxWidth: "620px" }}
         />
         {/* </figure> */}
 
-        <aside className="w-full max-w-[540px] flex flex-col">
+        <aside className="w-full max-w-[540px] flex flex-col max-[1260px]:max-w-[620px] max-[1260px]:mt-2">
           {/*  Preço, nome do produto e nome da marca */}
           <span className="font-normal font-helvetica text-xs text-gray-500 mb-1.5">
             {" "}
@@ -201,6 +200,7 @@ export const getServerSideProps: GetServerSideProps<
 
   const allPrices = productPriceData.data;
 
+  console.log(allPrices);
   // as Stripe.PriceListParams;
 
   return {

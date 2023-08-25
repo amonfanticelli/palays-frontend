@@ -40,7 +40,7 @@ export default function Cart() {
   }
 
   return (
-    <section className="flex flex-col bg-white fixed w-[480px] h-[900px] z-10 top-0 right-0 bottom-0 shadow-[-4px_0_30px_0_rgba(0,0,0,0.80)]">
+    <section className="flex flex-col bg-white fixed w-[480px] h-full max-h-[900px] z-10 top-0 right-0 bottom-0 shadow-[-4px_0_30px_0_rgba(0,0,0,0.80)] ">
       <div className="flex justify-end my-6 mr-6">
         <button onClick={() => setIsCartOpen(false)}>
           <X weight="bold" size={24} />
@@ -52,7 +52,7 @@ export default function Cart() {
       </h2>
       <ul className="mx-10 flex flex-col gap-6 min-h-[472px] max-h-[472px] overflow-auto relative">
         {!cartItems.length ? (
-          <span className="font font-helvetica font-bold self-center absolute  bottom-[210px] ">
+          <span className="font font-helvetica font-bold self-center absolute bottom-[210px] ">
             Seu carrinho está vazio
           </span>
         ) : (
@@ -64,31 +64,32 @@ export default function Cart() {
                 height={100}
                 alt="imagem do produto no carrinho"
               ></Image>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 w-full max-w-[280px]">
                 <span className="font-normal text-lg text-gray-500 font-helvetica">
                   {prod.name}
                 </span>
-                <span className="font-helvetica font-bold text-lg">
-                  {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  }).format(prod.numberPrice * quantity)}
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="font-helvetica font-bold text-lg">
+                    {new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(prod.numberPrice * quantity)}
+                  </span>
+                  <div className="flex border border-gray-400 items-center gap-3 px-2 h-11">
+                    <button onClick={() => minusRemoveFromCart(prod)}>
+                      <Minus size={16} weight={"regular"} />
+                    </button>
+                    <span>{quantity}</span>
+                    <button onClick={() => addToCart(prod)}>
+                      <Plus size={16} weight={"regular"} />
+                    </button>
+                  </div>
+                </div>
                 <button
                   onClick={() => removeCartItem(prod.id)}
                   className="flex font-helvetica font-bold text-base hover:text-red-600 transition duration-300"
                 >
                   Remover
-                </button>
-              </div>
-
-              <div className="flex border border-gray-400 items-center gap-3 px-2 h-11">
-                <button onClick={() => minusRemoveFromCart(prod)}>
-                  <Minus size={16} weight={"regular"} />
-                </button>
-                <span>{quantity}</span>
-                <button onClick={() => addToCart(prod)}>
-                  <Plus size={16} weight={"regular"} />
                 </button>
               </div>
             </li>
@@ -119,7 +120,7 @@ export default function Cart() {
       <button
         disabled={isCreatingCheckoutSession}
         onClick={handleCheckout}
-        className="self-center w-[384px] h-[69px] text-gray-50 border border-black bg-black disabled:opacity-60 disabled:cursor-not-allowed"
+        className="self-center w-[384px] min-h-[45px] text-gray-50 border border-black bg-black disabled:opacity-60 disabled:cursor-not-allowed mb-4"
       >
         Finalizar Compra
       </button>

@@ -35,7 +35,7 @@ export default function Home({ products }: HomeProps) {
     <div className="min-h-screen relative">
       {isCartOpen && <Cart />}
       <Header />
-      <main className="w-full max-w-screen-xl mx-auto py-7 px-10 ">
+      <main className="w-full max-w-screen-xl mx-auto py-7 px-10 max-[768px]:px-4">
         <h1 className="w-full text-2xl font-helvetica font-bold mb-8">Store</h1>
 
         <section className="w-full flex gap-3 ">
