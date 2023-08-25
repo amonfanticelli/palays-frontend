@@ -19,13 +19,67 @@ interface ProductProps {
     description: string;
     defaultPriceId: string;
     numberPrice: number;
+    priceVariants: [
+      {
+        id: string;
+        nickname: string;
+      }
+    ];
   };
 }
 
 export default function Product({ product }: ProductProps) {
+  const [priceSelected, setPriceSelected] = useState(product.defaultPriceId);
+
+  const productPriceIDs = product.priceVariants.map((priceVariant) => ({
+    priceId: priceVariant.id,
+    size: priceVariant.nickname,
+  }));
+
+  const handleSizeP = () => {
+    const priceIdForSizeP = productPriceIDs.find(
+      (price) => price.size === "pequeno"
+    );
+
+    console.log({ primeiroIDEncontrado: priceIdForSizeP });
+    if (priceIdForSizeP) {
+      setPriceSelected(priceIdForSizeP.priceId);
+    }
+
+    console.log({ IDSetado: product.defaultPriceId });
+  };
+
+  const handleSizeM = () => {
+    const priceIdForSizeM = productPriceIDs.find(
+      (price) => price.size === "médio"
+    );
+    if (priceIdForSizeM) {
+      setPriceSelected(priceIdForSizeM.priceId);
+    }
+  };
+
+  const handleSizeG = () => {
+    const priceIdForSizeG = productPriceIDs.find(
+      (price) => price.size === "grande"
+    );
+    if (priceIdForSizeG) {
+      setPriceSelected(priceIdForSizeG.priceId);
+    }
+  };
+
+  const handleSizeGG = () => {
+    const priceIdForSizeGG = productPriceIDs.find(
+      (price) => price.size === "extra-grande"
+    );
+    if (priceIdForSizeGG) {
+      setPriceSelected(priceIdForSizeGG.priceId);
+    }
+  };
+
+  console.log(product.defaultPriceId);
+
+  // const
   const { isCartOpen, addToCart } = useGlobalContext();
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false);
 
   // const { isFallback } = useRouter();
   // if (isFallback) {
@@ -33,21 +87,6 @@ export default function Product({ product }: ProductProps) {
   // }
   // loading da page -- pesquisar sobre skeleton page
 
-  async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true);
-      const response = await axios.post("/api/checkout", {
-        priceId: product.defaultPriceId,
-      });
-      const { checkoutUrl } = response.data;
-
-      window.location.href = checkoutUrl;
-    } catch (error) {
-      setIsCreatingCheckoutSession(false);
-      // Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
-      console.log(error);
-    }
-  }
   return (
     <div className="min-h-screen relative">
       {isCartOpen && <Cart />}
@@ -83,16 +122,28 @@ export default function Product({ product }: ProductProps) {
               Tamanho
             </span>
             <div className="flex gap-2 ">
-              <button className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm ">
+              <button
+                onClick={handleSizeP}
+                className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm "
+              >
                 P
               </button>
-              <button className="py-2.5 px-5 rounded-3xl  border border-black font-helvetica text-sm">
+              <button
+                onClick={handleSizeM}
+                className="py-2.5 px-5 rounded-3xl  border border-black font-helvetica text-sm"
+              >
                 M
               </button>
-              <button className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm">
+              <button
+                onClick={handleSizeG}
+                className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm"
+              >
                 G
               </button>
-              <button className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm">
+              <button
+                onClick={handleSizeGG}
+                className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm"
+              >
                 GG
               </button>
             </div>
@@ -106,13 +157,6 @@ export default function Product({ product }: ProductProps) {
             >
               ADICIONAR AO CARRINHO
             </button>
-            {/* <button
-              disabled={isCreatingCheckoutSession}
-              onClick={handleBuyProduct}
-              className="w-full border border-black bg-black max-w-[343px] h-[45px] text-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              COMPRAR
-            </button> */}
           </div>
           {/* container descrição */}
           <div className="flex flex-col gap-2">
@@ -148,13 +192,16 @@ export const getServerSideProps: GetServerSideProps<
     expand: ["default_price"],
   });
 
+  const price = product.default_price as Stripe.Price;
+
   const productPriceData = await stripe.prices.list({
-    expand: ["data.product"], //
+    product: productId,
+    active: true,
   });
 
-  console.log(productPriceData);
+  const allPrices = productPriceData.data;
 
-  const price = product.default_price as Stripe.Price;
+  // as Stripe.PriceListParams;
 
   return {
     props: {
@@ -169,6 +216,7 @@ export const getServerSideProps: GetServerSideProps<
         numberPrice: price.unit_amount! / 100,
         description: product.description,
         defaultPriceId: price.id,
+        priceVariants: allPrices,
       },
     },
     //   revalidate: 60 * 60 * 1 // 1 hour

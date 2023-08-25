@@ -117,8 +117,9 @@ export default function Cart() {
         </div>
       </div>
       <button
+        disabled={isCreatingCheckoutSession}
         onClick={handleCheckout}
-        className="self-center w-[384px] h-[69px] text-gray-50 border border-black bg-black"
+        className="self-center w-[384px] h-[69px] text-gray-50 border border-black bg-black disabled:opacity-60 disabled:cursor-not-allowed"
       >
         Finalizar Compra
       </button>

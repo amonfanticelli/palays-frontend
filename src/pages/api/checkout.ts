@@ -75,32 +75,32 @@ export default async function handlerProducts(
     phone_number_collection: {
       enabled: true,
     },
-    custom_fields: [
-      {
-        key: "size",
-        label: {
-          custom: "Size",
-          type: "custom",
-        },
-        dropdown: {
-          options: [
-            {
-              label: "P",
-              value: "small",
-            },
-            {
-              label: "M",
-              value: "medium",
-            },
-            {
-              label: "G",
-              value: "big",
-            },
-          ],
-        },
-        type: "dropdown",
-      },
-    ],
+    // custom_fields: [
+    //   {
+    //     key: "size",
+    //     label: {
+    //       custom: "Size",
+    //       type: "custom",
+    //     },
+    //     dropdown: {
+    //       options: [
+    //         {
+    //           label: "P",
+    //           value: "small",
+    //         },
+    //         {
+    //           label: "M",
+    //           value: "medium",
+    //         },
+    //         {
+    //           label: "G",
+    //           value: "big",
+    //         },
+    //       ],
+    //     },
+    //     type: "dropdown",
+    //   },
+    // ],
     mode: "payment",
     success_url: successUrl,
     cancel_url: cancelUrl,
