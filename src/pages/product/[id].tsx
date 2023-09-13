@@ -28,7 +28,11 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
-  const [priceSelected, setPriceSelected] = useState(product.defaultPriceId);
+  const [buttonSmallStyle, setButtonSmallStyle] = useState(false);
+  const [buttonMediumStyle, setButtonMediumStyle] = useState(false);
+  const [buttonLargeStyle, setButtonLargeStyle] = useState(false);
+  const [buttonExtraLargeStyle, setButtonExtraLargeStyle] = useState(false);
+  // const [priceSelected, setPriceSelected] = useState(product.defaultPriceId);
 
   const productPriceIDs = product.priceVariants.map((priceVariant) => ({
     priceId: priceVariant.id,
@@ -42,7 +46,11 @@ export default function Product({ product }: ProductProps) {
 
     console.log({ primeiroIDEncontrado: priceIdForSizeP });
     if (priceIdForSizeP) {
-      setPriceSelected(priceIdForSizeP.priceId);
+      product.defaultPriceId = priceIdForSizeP.priceId;
+      setButtonSmallStyle(true);
+      setButtonMediumStyle(false);
+      setButtonLargeStyle(false);
+      setButtonExtraLargeStyle(false);
     }
 
     console.log({ IDSetado: product.defaultPriceId });
@@ -53,7 +61,11 @@ export default function Product({ product }: ProductProps) {
       (price) => price.size === "médio"
     );
     if (priceIdForSizeM) {
-      setPriceSelected(priceIdForSizeM.priceId);
+      product.defaultPriceId = priceIdForSizeM.priceId;
+      setButtonMediumStyle(true);
+      setButtonSmallStyle(false);
+      setButtonLargeStyle(false);
+      setButtonExtraLargeStyle(false);
     }
   };
 
@@ -62,7 +74,11 @@ export default function Product({ product }: ProductProps) {
       (price) => price.size === "grande"
     );
     if (priceIdForSizeG) {
-      setPriceSelected(priceIdForSizeG.priceId);
+      product.defaultPriceId = priceIdForSizeG.priceId;
+      setButtonLargeStyle(true);
+      setButtonMediumStyle(false);
+      setButtonSmallStyle(false);
+      setButtonExtraLargeStyle(false);
     }
   };
 
@@ -71,13 +87,14 @@ export default function Product({ product }: ProductProps) {
       (price) => price.size === "extra-grande"
     );
     if (priceIdForSizeGG) {
-      setPriceSelected(priceIdForSizeGG.priceId);
+      product.defaultPriceId = priceIdForSizeGG.priceId;
+      setButtonExtraLargeStyle(true);
+      setButtonLargeStyle(false);
+      setButtonMediumStyle(false);
+      setButtonSmallStyle(false);
     }
   };
 
-  console.log(product.defaultPriceId);
-
-  // const
   const { isCartOpen, addToCart } = useGlobalContext();
 
   // const { isFallback } = useRouter();
@@ -123,25 +140,41 @@ export default function Product({ product }: ProductProps) {
             <div className="flex gap-2 ">
               <button
                 onClick={handleSizeP}
-                className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm "
+                className={`py-2.5 px-5 rounded-3xl border ${
+                  buttonSmallStyle
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                } border-black font-helvetica text-sm`}
               >
                 P
               </button>
               <button
                 onClick={handleSizeM}
-                className="py-2.5 px-5 rounded-3xl  border border-black font-helvetica text-sm"
+                className={`py-2.5 px-5 rounded-3xl ${
+                  buttonMediumStyle
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                } border border-black font-helvetica text-sm`}
               >
                 M
               </button>
               <button
                 onClick={handleSizeG}
-                className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm"
+                className={`py-2.5 px-5 rounded-3xl ${
+                  buttonLargeStyle
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                } border border-black font-helvetica text-sm`}
               >
                 G
               </button>
               <button
                 onClick={handleSizeGG}
-                className="py-2.5 px-5 rounded-3xl border border-black font-helvetica text-sm"
+                className={`py-2.5 px-5 rounded-3xl ${
+                  buttonExtraLargeStyle
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                } border border-black font-helvetica text-sm`}
               >
                 GG
               </button>
@@ -199,9 +232,6 @@ export const getServerSideProps: GetServerSideProps<
   });
 
   const allPrices = productPriceData.data;
-
-  console.log(allPrices);
-  // as Stripe.PriceListParams;
 
   return {
     props: {

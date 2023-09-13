@@ -37,6 +37,7 @@ export default function Success({
               className=" flex items-center justify-center rounded-full relative w-[140px] h-[140px] shadow-[8px_8px_68px_0_rgba(0,0,0,0.8)]"
             >
               <Image
+                className="rounded-full"
                 src={image}
                 alt="imagem do produto comprado"
                 width={120}
