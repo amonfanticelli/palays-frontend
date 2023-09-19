@@ -6,9 +6,10 @@ import { stripe } from "@/lib/stripe";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useState } from "react";
-import { useGlobalContext } from "@/provider/store";
+import { IPriceVariant, useGlobalContext } from "@/provider/store";
 import Cart from "@/components/Cart";
 import Footer from "@/components/Footer";
+
 interface ProductProps {
   product: {
     id: string;
@@ -18,84 +19,26 @@ interface ProductProps {
     description: string;
     defaultPriceId: string;
     numberPrice: number;
-    priceVariants: [
-      {
-        id: string;
-        nickname: string;
-      }
-    ];
+
+    priceVariants: IPriceVariant[];
   };
 }
 
 export default function Product({ product }: ProductProps) {
-  const [buttonSmallStyle, setButtonSmallStyle] = useState(false);
-  const [buttonMediumStyle, setButtonMediumStyle] = useState(false);
-  const [buttonLargeStyle, setButtonLargeStyle] = useState(false);
-  const [buttonExtraLargeStyle, setButtonExtraLargeStyle] = useState(false);
-  // const [priceSelected, setPriceSelected] = useState(product.defaultPriceId);
-
-  const productPriceIDs = product.priceVariants.map((priceVariant) => ({
-    priceId: priceVariant.id,
-    size: priceVariant.nickname,
-  }));
-
-  const handleSizeP = () => {
-    const priceIdForSizeP = productPriceIDs.find(
-      (price) => price.size === "pequeno"
-    );
-
-    console.log({ primeiroIDEncontrado: priceIdForSizeP });
-    if (priceIdForSizeP) {
-      product.defaultPriceId = priceIdForSizeP.priceId;
-      setButtonSmallStyle(true);
-      setButtonMediumStyle(false);
-      setButtonLargeStyle(false);
-      setButtonExtraLargeStyle(false);
-    }
-
-    console.log({ IDSetado: product.defaultPriceId });
-  };
-
-  const handleSizeM = () => {
-    const priceIdForSizeM = productPriceIDs.find(
-      (price) => price.size === "médio"
-    );
-    if (priceIdForSizeM) {
-      product.defaultPriceId = priceIdForSizeM.priceId;
-      setButtonMediumStyle(true);
-      setButtonSmallStyle(false);
-      setButtonLargeStyle(false);
-      setButtonExtraLargeStyle(false);
-    }
-  };
-
-  const handleSizeG = () => {
-    const priceIdForSizeG = productPriceIDs.find(
-      (price) => price.size === "grande"
-    );
-    if (priceIdForSizeG) {
-      product.defaultPriceId = priceIdForSizeG.priceId;
-      setButtonLargeStyle(true);
-      setButtonMediumStyle(false);
-      setButtonSmallStyle(false);
-      setButtonExtraLargeStyle(false);
-    }
-  };
-
-  const handleSizeGG = () => {
-    const priceIdForSizeGG = productPriceIDs.find(
-      (price) => price.size === "extra-grande"
-    );
-    if (priceIdForSizeGG) {
-      product.defaultPriceId = priceIdForSizeGG.priceId;
-      setButtonExtraLargeStyle(true);
-      setButtonLargeStyle(false);
-      setButtonMediumStyle(false);
-      setButtonSmallStyle(false);
-    }
-  };
-
   const { isCartOpen, addToCart } = useGlobalContext();
+
+  const [selectedPrice, setSelectedPrice] = useState<IPriceVariant | null>(
+    null
+  );
+
+  const handleSelectSize = (size: string) => {
+    const priceFound = product.priceVariants.find(
+      (price) => price.nickname === size
+    );
+    if (priceFound) {
+      setSelectedPrice(priceFound);
+    }
+  };
 
   // const { isFallback } = useRouter();
   // if (isFallback) {
@@ -104,11 +47,10 @@ export default function Product({ product }: ProductProps) {
   // loading da page -- pesquisar sobre skeleton page
 
   return (
-    <div className="min-h-screen relative">
+    <div className="lg:min-h-[1500px] grid relative">
       {isCartOpen && <Cart />}
       <Header />
       <section className="w-full h max-w-screen-xl mx-auto py-8 px-10 flex justify-between max-[768px]:px-4 max-[1260px]:flex max-[1260px]:flex-col max-[1260px]:items-center">
-        {/* <figure className="w-full h-full "> */}
         <Image
           src={product.imageUrl}
           width={620}
@@ -116,7 +58,6 @@ export default function Product({ product }: ProductProps) {
           sizes="(max-width: 768px) 100vw"
           alt="imagem do produto"
         />
-        {/* </figure> */}
 
         <aside className="w-full max-w-[540px] flex flex-col max-[1260px]:max-w-[620px] max-[1260px]:mt-2">
           {/*  Preço, nome do produto e nome da marca */}
@@ -139,9 +80,9 @@ export default function Product({ product }: ProductProps) {
             </span>
             <div className="flex gap-2 ">
               <button
-                onClick={handleSizeP}
+                onClick={() => handleSelectSize("pequeno")}
                 className={`py-2.5 px-5 rounded-3xl border ${
-                  buttonSmallStyle
+                  selectedPrice?.nickname === "pequeno"
                     ? "bg-black text-white"
                     : "bg-white text-black"
                 } border-black font-helvetica text-sm`}
@@ -149,9 +90,9 @@ export default function Product({ product }: ProductProps) {
                 P
               </button>
               <button
-                onClick={handleSizeM}
+                onClick={() => handleSelectSize("médio")}
                 className={`py-2.5 px-5 rounded-3xl ${
-                  buttonMediumStyle
+                  selectedPrice?.nickname === "médio"
                     ? "bg-black text-white"
                     : "bg-white text-black"
                 } border border-black font-helvetica text-sm`}
@@ -159,9 +100,9 @@ export default function Product({ product }: ProductProps) {
                 M
               </button>
               <button
-                onClick={handleSizeG}
+                onClick={() => handleSelectSize("grande")}
                 className={`py-2.5 px-5 rounded-3xl ${
-                  buttonLargeStyle
+                  selectedPrice?.nickname === "grande"
                     ? "bg-black text-white"
                     : "bg-white text-black"
                 } border border-black font-helvetica text-sm`}
@@ -169,9 +110,9 @@ export default function Product({ product }: ProductProps) {
                 G
               </button>
               <button
-                onClick={handleSizeGG}
+                onClick={() => handleSelectSize("extra-grande")}
                 className={`py-2.5 px-5 rounded-3xl ${
-                  buttonExtraLargeStyle
+                  selectedPrice?.nickname === "extra-grande"
                     ? "bg-black text-white"
                     : "bg-white text-black"
                 } border border-black font-helvetica text-sm`}
@@ -184,8 +125,9 @@ export default function Product({ product }: ProductProps) {
           {/* container buttons */}
           <div className="flex flex-col gap-1.5 mb-3.5">
             <button
-              onClick={() => addToCart(product)}
-              className="w-full border border-black max-w-[343px] h-[45px] font-normal font-helvetica hover:bg-black hover:text-gray-50 transition duration-300"
+              onClick={() => addToCart(product, selectedPrice!)}
+              disabled={!selectedPrice}
+              className="disabled:opacity-60 disabled:cursor-not-allowed w-full border border-black max-w-[343px] h-[45px] font-normal font-helvetica hover:bg-black hover:text-gray-50 transition duration-300"
             >
               ADICIONAR AO CARRINHO
             </button>
@@ -195,9 +137,14 @@ export default function Product({ product }: ProductProps) {
             <span className="font-semibold font-helvetica">
               Descrição do Produto:
             </span>
-            <p className="font-normal font-helvetica text-slate-600">
-              {product.description}
-            </p>
+            {product.description.split(";").map((item, index) => (
+              <p
+                key={index}
+                className="font-normal font-helvetica text-slate-600"
+              >
+                {item.trim()}{" "}
+              </p>
+            ))}
           </div>
         </aside>
       </section>
@@ -224,6 +171,7 @@ export const getServerSideProps: GetServerSideProps<
     expand: ["default_price"],
   });
 
+  console.log(product);
   const price = product.default_price as Stripe.Price;
 
   const productPriceData = await stripe.prices.list({

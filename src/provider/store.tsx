@@ -10,6 +10,10 @@ interface IProvider {
   children: React.ReactNode;
 }
 
+export interface IPriceVariant {
+  id: string;
+  nickname: string;
+}
 export interface IProduct {
   id: string;
   name: string;
@@ -18,10 +22,12 @@ export interface IProduct {
   numberPrice: number;
   description: string;
   defaultPriceId: string;
+  priceVariants: IPriceVariant[];
 }
 export interface ICartItem {
   prod: IProduct;
   quantity: number;
+  selectedPrice: IPriceVariant;
 }
 interface ContextProps {
   isCartOpen: boolean;
@@ -29,8 +35,11 @@ interface ContextProps {
   handleCart: () => void;
   cartItems: ICartItem[];
   setCartItems: Dispatch<SetStateAction<ICartItem[]>>;
-  addToCart: (product: IProduct) => void;
-  minusRemoveFromCart: (newProduct: IProduct) => void;
+  addToCart: (product: IProduct, selectedPrice: IPriceVariant) => void;
+  minusRemoveFromCart: (
+    newProduct: IProduct,
+    selectedPrice: IPriceVariant
+  ) => void;
   removeCartItem: (productId: string) => void;
   cartTotal: number;
 }
@@ -45,48 +54,61 @@ export function GlobalContextProvider({ children }: IProvider) {
     setIsCartOpen(!isCartOpen);
   };
 
-  const addToCart = (newProduct: IProduct) => {
+  const addToCart = (newProduct: IProduct, selectedPrice: IPriceVariant) => {
     const cartItemFound = cartItems.find(
-      ({ prod }) => prod.id === newProduct.id
+      (cartItem) =>
+        cartItem.prod.id === newProduct.id &&
+        cartItem.selectedPrice.id === selectedPrice.id
     );
     if (cartItemFound) {
       setCartItems((state) =>
         state.map((cartItem) =>
-          cartItem.prod.id === cartItemFound.prod.id
+          cartItem.selectedPrice.id === cartItemFound.selectedPrice.id
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         )
       );
     } else {
-      setCartItems((state) => [...state, { prod: newProduct, quantity: 1 }]);
+      setCartItems((state) => [
+        ...state,
+        { prod: newProduct, quantity: 1, selectedPrice },
+      ]);
     }
 
     setIsCartOpen(true);
   };
 
-  const minusRemoveFromCart = (newProduct: IProduct) => {
+  const minusRemoveFromCart = (
+    newProduct: IProduct,
+    selectedPrice: IPriceVariant
+  ) => {
     const cartItemFound = cartItems.find(
-      ({ prod }) => prod.id === newProduct.id
+      (cartItem) =>
+        cartItem.prod.id === newProduct.id &&
+        cartItem.selectedPrice.id === selectedPrice.id
     );
-    // [{ prod: 1, qtd: 1 }, { prod: 2, qtd: 2 }]
-    // if (cartItem.quantity > 1  ) {... } else { remove}
-    if (cartItemFound?.quantity! > 1) {
+
+    if (cartItemFound && cartItemFound.quantity > 1) {
       setCartItems((state) =>
         state.map((cartItem) =>
-          cartItem.prod.id === newProduct.id
+          cartItem.selectedPrice.id === cartItemFound.selectedPrice.id
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem
         )
       );
     } else {
       setCartItems((state) =>
-        state.filter(({ prod }) => prod.id !== newProduct.id)
+        state.filter(
+          (cartItem) => cartItem.selectedPrice.id !== selectedPrice.id
+        )
       );
     }
   };
 
-  const removeCartItem = (productId: string) => {
-    setCartItems((state) => state.filter(({ prod }) => prod.id !== productId));
+  const removeCartItem = (selectedPriceId: string) => {
+    setCartItems((state) =>
+      state.filter((cartItem) => cartItem.selectedPrice.id !== selectedPriceId)
+    );
   };
 
   const cartTotal = cartItems.reduce((total, { prod, quantity }) => {

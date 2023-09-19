@@ -32,7 +32,7 @@ export default function Home({ products }: HomeProps) {
   register();
   const { isCartOpen } = useGlobalContext();
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen grid relative">
       {isCartOpen && <Cart />}
       <Header />
       <main className="w-full max-w-screen-xl mx-auto py-7 px-10 max-[768px]:px-4">
@@ -75,7 +75,7 @@ export default function Home({ products }: HomeProps) {
                 >
                   <figure>
                     <Image
-                      className="mx-auto"
+                      className="mx-auto w-full max-w-[250px] h-full max-h-[300px] min-h-[300px]"
                       src={product.imageUrl}
                       alt="imagem do card"
                       width={250}

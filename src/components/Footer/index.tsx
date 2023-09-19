@@ -6,7 +6,7 @@ import visa from "../../../public/assets/visa.svg";
 export default function Footer() {
   return (
     <>
-      <footer className="mt-[250px] h-[150px] w-full border-t border-gray-300 flex flex-col justify-center items-center gap-2">
+      <footer className="mt-[250px] h-[150px] w-full border-t border-gray-300 flex flex-col justify-center items-center gap-2 self-end">
         <div className="flex">
           <Image src={visa} alt="visa icon" width={52} height={52}></Image>
           <Image

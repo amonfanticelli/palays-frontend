@@ -28,7 +28,10 @@ export default function Cart() {
       setIsCreatingCheckoutSession(true);
 
       const response = await axios.post("/api/checkout", {
-        products: cartItems,
+        products: cartItems.map(({ prod, quantity, selectedPrice }) => ({
+          prod: { ...prod, defaultPriceId: selectedPrice.id },
+          quantity,
+        })),
       });
       const { checkoutUrl } = response.data;
 
@@ -40,7 +43,7 @@ export default function Cart() {
   }
 
   return (
-    <section className="flex flex-col bg-white fixed w-[480px] h-full max-h-[900px] z-10 top-0 right-0 bottom-0 shadow-[-4px_0_30px_0_rgba(0,0,0,0.80)] px-4 max-[768px]:w-full overflow-scroll">
+    <section className="flex flex-col bg-white fixed w-[480px] h-full max-h-[900px] z-10 top-0 right-0 bottom-0 shadow-[-4px_0_30px_0_rgba(0,0,0,0.80)] px-4 max-[768px]:w-full overflow-y-auto">
       <div className="flex justify-end my-6 mr-6">
         <button onClick={() => setIsCartOpen(false)}>
           <X weight="bold" size={24} />
@@ -57,19 +60,23 @@ export default function Cart() {
               Seu carrinho está vazio
             </span>
           ) : (
-            cartItems.map(({ prod, quantity }) => (
-              <li key={prod.id} className="flex justify-between">
+            cartItems.map(({ prod, quantity, selectedPrice }) => (
+              <li
+                key={prod.id}
+                className="flex justify-between items-center border-b border-gray-200 pb-6"
+              >
                 <Image
+                  className="max-h-[100px] max-w-[100px] w-full h-full"
                   src={prod.imageUrl}
                   width={100}
                   height={100}
                   alt="imagem do produto no carrinho"
                 ></Image>
-                <div className="flex flex-col gap-2 w-full max-w-[280px] ml-2">
+                <div className="flex flex-col gap-2 w-full ml-2">
                   <span className="font-normal text-lg text-gray-500 font-helvetica">
                     {prod.name}
                   </span>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
                     <span className="font-helvetica font-bold text-lg">
                       {new Intl.NumberFormat("pt-BR", {
                         style: "currency",
@@ -77,17 +84,23 @@ export default function Cart() {
                       }).format(prod.numberPrice * quantity)}
                     </span>
                     <div className="flex border border-gray-400 items-center gap-3 px-2 h-11">
-                      <button onClick={() => minusRemoveFromCart(prod)}>
+                      <button
+                        onClick={() => minusRemoveFromCart(prod, selectedPrice)}
+                      >
                         <Minus size={16} weight={"regular"} />
                       </button>
                       <span>{quantity}</span>
-                      <button onClick={() => addToCart(prod)}>
+                      <button onClick={() => addToCart(prod, selectedPrice)}>
                         <Plus size={16} weight={"regular"} />
                       </button>
                     </div>
                   </div>
+                  <div>
+                    <span>Tamanho:</span>
+                    <span> {selectedPrice.nickname} </span>
+                  </div>
                   <button
-                    onClick={() => removeCartItem(prod.id)}
+                    onClick={() => removeCartItem(selectedPrice.id)}
                     className="flex font-helvetica font-bold text-base hover:text-red-600 transition duration-300 "
                   >
                     Remover
