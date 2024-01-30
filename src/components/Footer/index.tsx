@@ -17,7 +17,7 @@ export default function Footer() {
           ></Image>
         </div>
         <span className="text-xs font-normal font-helvetica flex items-center">
-          © 2023, Palays, todos os direitos reservados
+          © 2024, Palays, todos os direitos reservados
         </span>
       </footer>
     </>

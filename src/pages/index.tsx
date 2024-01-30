@@ -32,74 +32,78 @@ export default function Home({ products }: HomeProps) {
   register();
   const { isCartOpen } = useGlobalContext();
   return (
-    <div className="min-h-screen grid relative">
+    <>
       {isCartOpen && <Cart />}
       <Header />
-      <main className="w-full max-w-screen-xl mx-auto py-7 px-10 max-[768px]:px-4">
-        <h1 className="w-full text-2xl font-helvetica font-bold mb-8">Store</h1>
+      <div className="h-screen flex flex-col justify-between content-between relative">
+        <main className="w-full max-w-screen-xl mx-auto py-7 px-10 max-[768px]:px-4">
+          <h1 className="w-full text-2xl font-helvetica font-bold mb-8">
+            Store
+          </h1>
 
-        <section className="w-full flex gap-3 ">
-          <Swiper
-            modules={[Navigation, Pagination, A11y, EffectFade]}
-            slidesPerView={3}
-            spaceBetween={10}
-            pagination={{ clickable: true, dynamicBullets: true }}
-            navigation={true}
-            grabCursor={true}
-            longSwipes={false}
-            // a11y={true}
+          <section className="w-full flex gap-3 ">
+            <Swiper
+              modules={[Navigation, Pagination, A11y, EffectFade]}
+              slidesPerView={3}
+              spaceBetween={10}
+              pagination={{ clickable: true, dynamicBullets: true }}
+              navigation={true}
+              grabCursor={true}
+              longSwipes={false}
+              // a11y={true}
 
-            breakpoints={{
-              700: {
-                slidesPerView: 3,
-                spaceBetween: 10,
-              },
+              breakpoints={{
+                700: {
+                  slidesPerView: 3,
+                  spaceBetween: 10,
+                },
 
-              550: {
-                slidesPerView: 2,
-                spaceBetween: 10,
-              },
+                550: {
+                  slidesPerView: 2,
+                  spaceBetween: 10,
+                },
 
-              320: {
-                slidesPerView: 1,
-                spaceBetween: 10,
-              },
-            }}
-          >
-            {products.map((product) => (
-              <SwiperSlide key={product.id}>
-                <Link
-                  href={`/product/${product.id}`}
-                  className="w-[269px] flex flex-col"
-                  prefetch={false}
-                >
-                  <figure>
-                    <Image
-                      className="mx-auto w-full max-w-[250px] h-full max-h-[300px] min-h-[300px]"
-                      src={product.imageUrl}
-                      alt="imagem do card"
-                      width={250}
-                      height={250}
-                    />
-                  </figure>
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 10,
+                },
+              }}
+            >
+              {products.map((product) => (
+                <SwiperSlide key={product.id}>
+                  <Link
+                    href={`/product/${product.id}`}
+                    className="w-[269px] flex flex-col"
+                    prefetch={false}
+                  >
+                    <figure>
+                      <Image
+                        className="mx-auto w-full max-w-[250px] h-full max-h-[300px] min-h-[300px]"
+                        src={product.imageUrl}
+                        alt="imagem do card"
+                        width={250}
+                        height={250}
+                      />
+                    </figure>
 
-                  <div className="flex flex-col py-6">
-                    <span className=" font-bold text-sm font-helvetica">
-                      {" "}
-                      {product.name}
-                    </span>
-                    <span className="font-normal font-helvetica text-base">
-                      {product.price}{" "}
-                    </span>
-                  </div>
-                </Link>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </section>
-      </main>
-      <Footer />
-    </div>
+                    <div className="flex flex-col py-6">
+                      <span className=" font-bold text-sm font-helvetica">
+                        {" "}
+                        {product.name}
+                      </span>
+                      <span className="font-normal font-helvetica text-base">
+                        {product.price}{" "}
+                      </span>
+                    </div>
+                  </Link>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </section>
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 }
 

@@ -38,7 +38,7 @@ export default function Cart() {
       window.location.href = checkoutUrl;
     } catch (err) {
       setIsCreatingCheckoutSession(false);
-      console.log(err);
+      // console.log(err);
     }
   }
 
