@@ -1,38 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Palays App
 
-## Getting Started
+## Descrição da aplicação:
 
-First, run the development server:
+Este e-commerce de camisetas é um projeto pessoal desenvolvido utilizando Next.js, projetado para ser responsivo e intuitivo. O objetivo principal deste projeto é demonstrar e aprimorar minhas habilidades com Next.js, aplicando conceitos de Server Side Rendering (SSR), Static Site Generation (SSG) e Client Side Rendering (CSR).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Recursos da Aplicação:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Vitrine de produtos na homepage.
+Página de detalhes do produto.
+Carrinho de compras interativo.
+Checkout integrado com Stripe.
+Seleção e remoção de quantidades de produtos no carrinho.
+Página de sucesso de Compra.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Tecnologias e Ferramentas:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Next.js: Framework de desenvolvimento web.
+TypeScript: Linguagem de programação tipada.
+Tailwind CSS: Framework CSS para design responsivo.
+Axios: Cliente HTTP para fazer requisições.
+Phosphor-Icons: Biblioteca de ícones.
+React Router Dom: Gerenciamento de rotas.
+Stripe: Plataforma de pagamentos.
+Swiper: Carrossel de imagens.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Instruções de utilização da aplicação:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Para instalar as dependências utilize: npm install
+Para iniciar a aplicação localmente, utilize: npm run dev
 
-## Learn More
+## Deploy Vercel:
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Caso queira acessar a aplicação através do deploy, acesse:
